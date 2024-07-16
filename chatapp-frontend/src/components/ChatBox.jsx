@@ -30,7 +30,7 @@ const Chatbox = () => {
 
   useEffect(() => {
     const newSocket = new WebSocket(
-      "ws://chatappvedant.pythonanywhere.com/ws/chat/myroom/"
+      "wss://chatappvedant.pythonanywhere.com/ws/chat/myroom/"
     );
 
     newSocket.onopen = () => {
