@@ -16,16 +16,14 @@ import { useSelector } from "react-redux";
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([]);
+  console.log("messages: ", messages);
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const { loginData } = useSelector(authUserSelector);
   const [username, setUsername] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
 
-  useEffect(() => {
-    setUsername(loginData?.username);
-  }, [loginData]);
-
+  console.log("loginData?.username: ", loginData?.username);
   useEffect(() => {
     setUsername(loginData?.username);
   }, [loginData]);
@@ -39,7 +37,6 @@ const Chatbox = () => {
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-
       setMessages((prevMessages) => [...prevMessages, data]);
     };
 
@@ -61,14 +58,15 @@ const Chatbox = () => {
   const sendMessage = (event) => {
     event.preventDefault();
     if (socket && socket.readyState === WebSocket.OPEN) {
-      console.log("Sending message:", {
+      const messageData = {
         message,
         username,
         receiver: receiverUsername,
-      });
-      socket.send(
-        JSON.stringify({ message, username, receiver: receiverUsername })
-      );
+        timestamp: new Date().toISOString(),
+      };
+      console.log("Sending message:", messageData);
+      socket.send(JSON.stringify(messageData));
+      setMessages((prevMessages) => [...prevMessages, messageData]);
       setMessage("");
     }
   };
@@ -93,16 +91,33 @@ const Chatbox = () => {
         </Flex>
       </Flex>
       <Flex className="chatbox-body">
-        <Flex className="sent-wrapper">
-          <Flex className="sent-ctn">how are you?</Flex>
-        </Flex>
-        <Flex className="received-ctn">
-          <ul>
-            {messages.map((msg, index) => (
-              <li key={index}>{msg.message}</li>
+        <ul>
+          {messages
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+            .map((msg, index) => (
+              <Flex
+                key={index}
+                className={
+                  msg.username === username ? "sent-wrapper" : "received-ctn"
+                }
+                style={{
+                  justifyContent:
+                    msg.username === username ? "flex-end" : "flex-start",
+                }}
+              >
+                <Flex
+                  className={
+                    msg.username === username ? "sent-ctn" : "received-ctn"
+                  }
+                >
+                  {msg.message}{" "}
+                  <span className="timestamp">
+                    {new Date(msg.timestamp).toLocaleTimeString()}
+                  </span>
+                </Flex>
+              </Flex>
             ))}
-          </ul>
-        </Flex>
+        </ul>
       </Flex>
       <Flex className="chatbox-footer">
         <Flex className="interact-icons">
