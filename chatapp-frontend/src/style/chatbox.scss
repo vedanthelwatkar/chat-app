@@ -1,0 +1,93 @@
+.chatbox-wrapper-inner {
+  flex-direction: column;
+  margin: 24px;
+  border-radius: 12px;
+  width: 100%;
+  border: 1px solid var(--stroke-color);
+  .chatbox-header {
+    height: 64px;
+    border-bottom: 1px solid var(--stroke-color);
+    padding: 8px;
+    justify-content: space-between;
+    .profile-info {
+      gap: 12px;
+      margin-left: 8px;
+      .anticon-user {
+        border: 1px solid var(--text-secondary, #898989);
+        border-radius: 50%;
+      }
+    }
+    svg {
+      height: 24px;
+      width: 24px;
+      margin: 10px;
+    }
+    .info-text-ctn {
+      flex-direction: column;
+      justify-content: center;
+      .user-name {
+        color: var(--text-primary, #0c0c0c);
+        font-size: 14px;
+        font-weight: 400;
+      }
+      .user-text {
+        color: var(--text-secondary, #898989);
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
+    .contact-ctn {
+      gap: 12px;
+    }
+  }
+  .chatbox-body {
+    height: 100%;
+    border-bottom: 1px solid var(--stroke-color);
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    .received-ctn {
+      background-color: var(--background-color);
+      padding: 12px;
+      border-radius: 12px;
+      width: fit-content;
+      box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+    }
+    .sent-wrapper {
+      justify-content: flex-end;
+      .sent-ctn {
+        justify-content: flex-start;
+        background-color: var(--background-color);
+        padding: 12px;
+        border-radius: 12px;
+        width: fit-content;
+        box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  .chatbox-footer {
+    align-items: center;
+    margin: 0px 12px;
+    .interact-icons {
+      gap: 12px;
+      align-items: center;
+    }
+    .send-icon {
+      svg {
+        height: 20px;
+        width: 20px;
+      }
+    }
+    .form-input {
+      border: 0px;
+      font-family: "Poppins", sans-serif;
+      &:focus-within {
+        border: 0px;
+        box-shadow: none;
+      }
+    }
+    .ant-input {
+      padding: 12px 16px 12px 33px;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+.home-page-wrapper {
+  height: 100%;
+  .chathistory-wrapper {
+    border-right: 1px solid var(--stroke-color, #dcdcdc);
+    width: 25%;
+  }
+  .chatbox-wrapper {
+    width: 75%;
+  }
+}

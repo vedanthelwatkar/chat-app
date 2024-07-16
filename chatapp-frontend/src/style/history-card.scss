@@ -1,0 +1,52 @@
+.profile-info-ctn {
+  margin-left: 12px;
+  width: 100%;
+  height: 45px;
+  justify-content: space-between;
+  .profile-info {
+    gap: 12px;
+    .anticon-user {
+      border: 1px solid var(--text-secondary, #898989);
+      border-radius: 50%;
+    }
+  }
+  svg {
+    height: 24px;
+    width: 24px;
+    margin: 10px;
+  }
+  .info-text-ctn {
+    flex-direction: column;
+    justify-content: space-between;
+    .user-name {
+      color: var(--text-primary, #0c0c0c);
+      font-size: 14px;
+      font-weight: 400;
+    }
+    .user-text {
+      color: var(--text-secondary, #898989);
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+  .time-message {
+    flex-direction: column;
+    justify-content: space-between;
+    .time-ctn {
+      color: var(--text-secondary, #898989);
+      font-size: 12px;
+      font-weight: 300;
+    }
+    .message-count {
+      background-color: var(--primary-color, #232a87);
+      border-radius: 40px;
+      span {
+        color: var(--secondary-color, #e9eaf3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+      }
+    }
+  }
+}
