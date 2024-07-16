@@ -1,13 +1,27 @@
 import { Button, Flex, Form, Input, Typography } from "antd";
 import "../style/auth.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { authUserSelector } from "../redux/selectors/selectors";
+import { loginUser } from "../redux/slice/AuthSlice";
+import { useEffect } from "react";
 
 const { Text } = Typography;
 
 const LoginPage = () => {
+  const { loginData } = useSelector(authUserSelector);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleSubmit = (values) => {
-    console.log("Form Submitted: ", values);
+    dispatch(loginUser(values));
   };
+
+  useEffect(() => {
+    if (loginData?.loggedIn == 1) {
+      navigate("/");
+    }
+  }, [navigate, dispatch, loginData]);
 
   return (
     <Flex className="auth-wrapper">
@@ -16,16 +30,16 @@ const LoginPage = () => {
           <Text className="auth-text">Login Account</Text>
           <Flex className="auth-inputs">
             <Form.Item
-              name="email"
+              name="un"
               rules={[
-                { required: true, message: "Please input your email!" },
-                { type: "email", message: "Please enter a valid email!" },
+                { required: true, message: "Please input your username!" },
+                { type: "text", message: "Please enter a valid username!" },
               ]}
             >
-              <Input placeholder="Email" type="email" />
+              <Input placeholder="Username" type="text" />
             </Form.Item>
             <Form.Item
-              name="password"
+              name="pw"
               rules={[
                 { required: true, message: "Please input your password!" },
               ]}
@@ -34,11 +48,11 @@ const LoginPage = () => {
             </Form.Item>
           </Flex>
           <Flex className="auth-signin-container">
-            <Link to="/forgot-password" className="forgot-text">
-              Forgot password?
+            <Link to="/signup" className="forgot-text">
+              Sign Up
             </Link>
             <Button type="primary" htmlType="submit">
-              Sign In
+              Login
             </Button>
           </Flex>
         </Form>

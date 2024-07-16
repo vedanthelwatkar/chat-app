@@ -1,6 +1,8 @@
 .chat-history-ctn {
   width: 100%;
+  background-color: var(--background-color);
   .history-menu {
+    background-color: var(--white-color);
     align-items: flex-end;
     justify-content: center;
     border-right: 1px solid var(--stroke-color, #dcdcdc);

@@ -41,6 +41,8 @@
     }
   }
   .chatbox-body {
+    background-color: var(--background-color);
+
     height: 100%;
     border-bottom: 1px solid var(--stroke-color);
     flex-direction: column;

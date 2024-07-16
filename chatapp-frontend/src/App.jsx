@@ -5,12 +5,15 @@ import Home from "./pages/Home";
 import "./App.css";
 import HeaderNavigation from "./components/HeaderNavigation";
 import LoginPage from "../src/pages/LoginPage";
+import SignupPage from "../src/pages/SignupPage";
 import ForgotPassword from "../src/pages/ForgotPassword";
+import { Provider } from "react-redux";
+import { store } from "./redux/store/index.js";
 
 const primaryButtonStyle = {
-  colorPrimary: `#232A87`,
+  colorPrimary: `#1677ff`,
   colorPrimaryActive: `#232A87`,
-  colorPrimaryHover: `#232A87`,
+  colorPrimaryHover: `#1677ff`,
   paddingBlock: "12px",
   paddingInline: "16px",
   contentLineHeight: "16px",
@@ -31,30 +34,33 @@ const singleInputStyle = {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ConfigProvider
-        theme={{
-          components: {
-            Button: primaryButtonStyle,
-            Input: singleInputStyle,
-          },
-        }}
-      >
-        <Layout className="layout-wrapper">
-          <Header className="header-wrapper">
-            <HeaderNavigation />
-          </Header>
-          <Content className="content-wrapper">
-            <Routes>
-              <Route element={<Home />} path="/" />
-              <Route element={<LoginPage />} path="/login" />
-              <Route element={<ForgotPassword />} path="/forgot-password" />
-              <Route element={<Home />} path="*" />
-            </Routes>
-          </Content>
-        </Layout>
-      </ConfigProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: primaryButtonStyle,
+              Input: singleInputStyle,
+            },
+          }}
+        >
+          <Layout className="layout-wrapper">
+            <Header className="header-wrapper">
+              <HeaderNavigation />
+            </Header>
+            <Content className="content-wrapper">
+              <Routes>
+                <Route element={<Home />} path="/" />
+                <Route element={<LoginPage />} path="/login" />
+                <Route element={<SignupPage />} path="/signup" />
+                <Route element={<ForgotPassword />} path="/forgot-password" />
+                <Route element={<Home />} path="*" />
+              </Routes>
+            </Content>
+          </Layout>
+        </ConfigProvider>
+      </BrowserRouter>
+    </Provider>
   );
 };
 export default App;

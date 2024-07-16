@@ -16,15 +16,6 @@
     }
     .auth-inputs {
       flex-direction: column;
-      .ant-input-outlined:hover {
-        border: 1px solid #dcdcdc;
-      }
-      .ant-input-outlined {
-        &:focus-within {
-          box-shadow: none;
-          border: 1px solid var(--text-primary, #0c0c0c);
-        }
-      }
     }
     .auth-signin-container {
       justify-content: space-between;

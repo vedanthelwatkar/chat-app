@@ -26,7 +26,7 @@ const ChatHistory = () => {
             onChange={handleSearchInputChange}
             prefix={<SearchIcon />}
             allowClear
-            placeholder="Search merchant name"
+            placeholder="Search"
           />
         </Flex>
         <Flex className="chat-history">

@@ -4,14 +4,19 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppIcon from "../assets/AppIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
+import { logoutUser, resetState } from "../redux/slice/AuthSlice.js";
+import { useDispatch } from "react-redux";
 const { Text } = Typography;
 
 const HeaderNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState("/giftcard");
 
   const handleLogout = () => {
+    dispatch(logoutUser());
+    dispatch(resetState());
     navigate("/login");
   };
 
@@ -21,7 +26,7 @@ const HeaderNavigation = () => {
 
   return (
     <Row className="header-nav">
-      {(endpoint === "/login" || endpoint === "/forgot-password") && (
+      {(endpoint === "/login" || endpoint === "/signup") && (
         <div className="hide-header"></div>
       )}
       <Col span={4} className="menu-column-logo">
