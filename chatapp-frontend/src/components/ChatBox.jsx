@@ -29,7 +29,9 @@ const Chatbox = () => {
   }, [loginData]);
 
   useEffect(() => {
-    const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
+    const newSocket = new WebSocket(
+      "ws://chatappvedant.pythonanywhere.com/ws/chat/myroom/"
+    );
 
     newSocket.onopen = () => {
       console.log("WebSocket connection opened");
