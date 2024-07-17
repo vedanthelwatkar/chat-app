@@ -25,13 +25,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver = text_data_json["receiver"]
         timestamp = text_data_json["timestamp"]
 
-
-        await self.send(text_data=json.dumps({
-                    'message': message,
-                    'username': username,
-                    'receiver': receiver,
-                    'timestamp':timestamp
-                }))
+        # Broadcast message to the group
+        await self.channel_layer.group_send(
+            self.roomGroupName,
+            {
+                "type": "chat.message",
+                "message": message,
+                "username": username,
+                "receiver": receiver,
+                "timestamp": timestamp,
+            }
+        )
 
     async def chat_message(self, event):
         message = event["message"]
