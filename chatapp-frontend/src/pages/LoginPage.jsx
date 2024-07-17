@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authUserSelector } from "../redux/selectors/selectors";
 import { loginUser } from "../redux/slice/AuthSlice";
 import { useEffect } from "react";
+import axios from "axios";
 
 const { Text } = Typography;
 
@@ -15,6 +16,8 @@ const LoginPage = () => {
 
   const handleSubmit = (values) => {
     dispatch(loginUser(values));
+    const data = axios.get("http://localhost:8000/users");
+    console.log("data: ", data);
   };
 
   useEffect(() => {
@@ -30,13 +33,13 @@ const LoginPage = () => {
           <Text className="auth-text">Login Account</Text>
           <Flex className="auth-inputs">
             <Form.Item
-              name="un"
+              name="em"
               rules={[
-                { required: true, message: "Please input your username!" },
-                { type: "text", message: "Please enter a valid username!" },
+                { required: true, message: "Please input your email!" },
+                { type: "email", message: "Please enter a valid email!" },
               ]}
             >
-              <Input placeholder="Username" type="text" />
+              <Input placeholder="Email" type="email" />
             </Form.Item>
             <Form.Item
               name="pw"

@@ -4,3 +4,7 @@ django-rest-framework
 whitenoise
 channels
 daphne
+pymongo
+python-dotenv
+djongo
+certifi

@@ -80,6 +80,26 @@ WSGI_APPLICATION = 'chatappbackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+from pymongo.server_api import ServerApi
+
+import certifi
+ca = certifi.where()
+
+DATABASE = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'ClusterChatApp',  # Database name
+        'CLIENT': {
+            'host': 'mongodb+srv://vedanthelwatkar:vedant@clusterchatapp.vigxcwz.mongodb.net/?retryWrites=true&w=majority&appName=ClusterChatApp',
+            "username": "vedanthelwatkar",
+            "password": "vedant",
+            "authMechanism": "SCRAM-SHA-1",
+            'tlsCAFile': ca,  # Optional if using TLS/SSL
+            'server_api':ServerApi('1'),  # MongoDB server API version
+        },
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -133,11 +153,6 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_HTTPONLY = True
 
 CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = [
-    'https://docgpt-c4f84.web.app',
-    'https://localhost:3000'
-]
 
 CORS_ALLOW_HEADERS = [
     'accept',

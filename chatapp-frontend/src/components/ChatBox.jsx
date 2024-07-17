@@ -29,25 +29,27 @@ const Chatbox = () => {
   }, [loginData]);
 
   useEffect(() => {
-    const newSocket = new WebSocket(
-      "wss://chat-app-backend-vedant.vercel.app/ws/chat/myroom/"
-    );
+    const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
+    // const newSocket = new WebSocket(
+    //   "ws://chat-app-backend-vedant.vercel.app/ws/chat/myroom/"
+    // );
 
     newSocket.onopen = () => {
       console.log("WebSocket connection opened");
     };
 
     newSocket.onmessage = (event) => {
+      console.log("Received message:", event.data);
       const data = JSON.parse(event.data);
       setMessages((prevMessages) => [...prevMessages, data]);
     };
 
-    newSocket.onclose = () => {
-      console.log("WebSocket connection closed");
+    newSocket.onclose = (event) => {
+      console.log("WebSocket connection closed:", event.code, event.reason);
     };
 
     newSocket.onerror = (error) => {
-      console.error("WebSocket error: ", error);
+      console.error("WebSocket error:", error);
     };
 
     setSocket(newSocket);
