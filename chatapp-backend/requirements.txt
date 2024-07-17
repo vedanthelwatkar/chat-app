@@ -12,7 +12,7 @@ daphne==3.0.2
 pymongo==3.12.1
 
 # Environment variables handling
-python-dotenv==0.19.5
+python-dotenvaa
 
 # MongoDB support for Django
 djongo==1.6.2
