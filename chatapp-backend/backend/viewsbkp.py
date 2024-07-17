@@ -1,32 +1,30 @@
+import json
 from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-import json
 
-@csrf_exempt
 def home(request):
     if request.method == "POST":
         data = json.loads(request.body)
+        print('data: ', data)
         try:
             user_from_db = User.objects.get(username=data['username'])
-            if user_from_db is not None:
-                return JsonResponse({
-                    "message": "Home page",
-                    "loggedIn": 1,
-                    "username": user_from_db.username,
-                    "email": user_from_db.email
-                })
+            return JsonResponse({
+                "message": "home page",
+                "loggedIn": 1,
+                "username": user_from_db.username,
+                "email": user_from_db.email
+            })
         except User.DoesNotExist:
             return JsonResponse({"message": "User not found in database"}, status=404)
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
 
+
 def chat_page(request, *args, **kwargs):
     context = {}
-    return JsonResponse({"message": "User authenticated and authorized to view chat pages", "loggedIn": 1})
+    return JsonResponse({"message": "User authenticated and authorized to view chat pagesss", "loggedIn": 1})
 
-@csrf_exempt
 def login_user(request):
     if request.user.is_authenticated:
         return JsonResponse({"message": "Logged in already", "loggedIn": 1})
@@ -38,21 +36,17 @@ def login_user(request):
             user = authenticate(username=un, password=pw)
             if user is not None:
                 login(request, user)
-                return JsonResponse({
-                    "message": "Login successful",
-                    "loggedIn": 1,
-                    "username": request.user.username,
-                    "email": request.user.email
-                })
+                return JsonResponse({"message": "Login successful", "loggedIn": 1,"username": request.user.username,
+                "email": request.user.email})
             else:
                 return JsonResponse({"msg": "Invalid username/password"}, status=401)
         else:
             return JsonResponse({"message": "Invalid request method"}, status=405)
 
-@csrf_exempt
+
 def signup_user(request):
     if request.user.is_authenticated:
-        return JsonResponse({"message": "Logged in already", "loggedIn": 1})
+        return JsonResponse({"message": "Logged in already"}, {"loggedIn": 1})
     else:
         if request.method == "POST":
             data = json.loads(request.body)
@@ -62,24 +56,21 @@ def signup_user(request):
             pw2 = data.get("pw2")
             if pw1 == pw2:
                 try:
-                    existing_user = User.objects.get(username=un)
-                    if existing_user is not None:
-                        return JsonResponse({"msg": "User already exists"}, status=400)
+                    usr = User.objects.get(username=un,email=em)
+                    return JsonResponse({"msg": "User already exists"}, status=400)
                 except User.DoesNotExist:
-                    usr = User.objects.create_user(username=un, email=em, password=pw1)
+                    usr = User.objects.create_user(username=un,email=em, password=pw1)
                     usr.save()
-                    return JsonResponse({"message": "User creation successful", "userCreated": 1})
+                    return JsonResponse({"message": "User creation successful","userCreated":1})
             else:
                 return JsonResponse({"msg": "Passwords do not match"}, status=400)
         else:
             return JsonResponse({"message": "Invalid request method"}, status=405)
 
-@csrf_exempt
 def logout_user(request):
     logout(request)
     return JsonResponse({"message": "User logged out"})
 
-@csrf_exempt
 def get_all_users(request):
     users = User.objects.all()
     usernames = [user.username for user in users]

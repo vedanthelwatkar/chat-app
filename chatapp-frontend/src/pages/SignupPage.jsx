@@ -5,11 +5,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { signupUser } from "../redux/slice/AuthSlice";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import showToast from "../components/showToast";
 
 const { Text } = Typography;
 
 const LoginPage = () => {
-  const { signupData } = useSelector(authUserSelector);
+  const { signupData, error } = useSelector(authUserSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -21,7 +22,10 @@ const LoginPage = () => {
     if (signupData?.userCreated == 1) {
       navigate("/login");
     }
-  }, [navigate, dispatch, signupData]);
+    if (error) {
+      showToast("Error Logging in", "error");
+    }
+  }, [navigate, dispatch, signupData, error]);
 
   return (
     <Flex className="auth-wrapper">

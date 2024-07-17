@@ -6,7 +6,7 @@ whitenoise==5.3.0
 channels==3.0.4
 daphne==3.0.2
 
-pymongo[srv]
+pymongo==3.12.3
 
 python-dotenv
 
