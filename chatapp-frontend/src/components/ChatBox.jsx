@@ -29,9 +29,9 @@ const Chatbox = () => {
   }, [loginData]);
 
   useEffect(() => {
-    // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
+    // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/");
     const newSocket = new WebSocket(
-      "wss://chat-app-backend-vedant.vercel.app/ws/chat"
+      "wss://chat-app-9bk5.onrender.com/ws/chat/"
     );
 
     newSocket.onopen = () => {
