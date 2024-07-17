@@ -154,6 +154,12 @@ CSRF_COOKIE_HTTPONLY = True
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://chat-app-vedant.vercel.app"
+    # Add other origins as needed
+]
+
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
