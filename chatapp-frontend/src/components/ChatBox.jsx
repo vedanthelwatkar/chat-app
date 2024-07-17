@@ -31,7 +31,7 @@ const Chatbox = () => {
   useEffect(() => {
     // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
     const newSocket = new WebSocket(
-      "ws://chat-app-backend-vedant.vercel.app/ws/chat/"
+      "wss://chat-app-backend-vedant.vercel.app/ws/chat/"
     );
 
     newSocket.onopen = () => {
