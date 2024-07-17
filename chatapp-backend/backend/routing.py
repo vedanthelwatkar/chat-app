@@ -13,7 +13,7 @@ django_asgi_app = get_asgi_application()
 
 # WebSocket URL patterns
 websocket_urlpatterns = [
-    path('ws/chat/<str:room_name>/', ChatConsumer.as_asgi()),
+    path('ws/chat/', ChatConsumer.as_asgi()),
 ]
 
 # ProtocolTypeRouter for HTTP and WebSocket
