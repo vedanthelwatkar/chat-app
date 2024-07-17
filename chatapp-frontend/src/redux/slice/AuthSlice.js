@@ -5,11 +5,12 @@ import { ApiEndPoints, appconfig } from "../../../appConfig";
 // Async Thunks for API Calls
 export const getUser = createAsyncThunk(
   "getUser",
-  async (data, { rejectWithValue }) => {
+  async (username, { rejectWithValue }) => {
     try {
       const response = await axios({
-        method: "GET",
+        method: "POST",
         url: `${appconfig.BASE_URL}`,
+        data: username,
       });
       return response.data;
     } catch (e) {
@@ -69,22 +70,19 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// Initial State
-const initialState = {
-  data: null,
-  userData: [],
-  loginData: [],
-  signupData: [],
-  logoutSuccess: false,
-  logoutError: false,
-  error: null,
-  loading: false,
-};
-
 // Redux Slice
 const authUser = createSlice({
   name: "authUser",
-  initialState: initialState,
+  initialState: {
+    data: null,
+    userData: [],
+    loginData: [],
+    signupData: [],
+    logoutSuccess: false,
+    logoutError: false,
+    error: null,
+    loading: false,
+  },
   reducers: {
     resetState: (state) => {
       state.data = null;

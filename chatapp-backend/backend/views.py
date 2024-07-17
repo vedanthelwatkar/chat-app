@@ -3,26 +3,27 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 
-def chat_page(request, *args, **kwargs):
-    context = {}
-    return JsonResponse({"message": "User authenticated and authorized to view chat pagesss", "loggedIn": 1})
-
 def home(request):
-    if request.method == "GET":
-        if request.user.is_authenticated:
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print('data: ', data)
+        try:
+            user_from_db = User.objects.get(username=data['username'])
             return JsonResponse({
                 "message": "home page",
                 "loggedIn": 1,
-                "username": request.user.username,
-                "email": request.user.email
+                "username": user_from_db.username,
+                "email": user_from_db.email
             })
-        else:
-            return JsonResponse({
-                "message": "home page not authenticated",
-                "loggedIn": 0
-            })
+        except User.DoesNotExist:
+            return JsonResponse({"message": "User not found in database"}, status=404)
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
+
+
+def chat_page(request, *args, **kwargs):
+    context = {}
+    return JsonResponse({"message": "User authenticated and authorized to view chat pagesss", "loggedIn": 1})
 
 def login_user(request):
     if request.user.is_authenticated:

@@ -12,21 +12,26 @@ import Gallery from "../assets/Gallery";
 import EmojiIcon from "../assets/EmojiIcon";
 import { useEffect, useState } from "react";
 import { authUserSelector } from "../redux/selectors/selectors";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../redux/slice/AuthSlice";
 
 const Chatbox = () => {
   const [messages, setMessages] = useState([]);
-  console.log("messages: ", messages);
+  const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
-  const { loginData } = useSelector(authUserSelector);
+  const { loginData, userData } = useSelector(authUserSelector);
+  console.log("userData: ", userData);
   const [username, setUsername] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
 
   console.log("loginData?.username: ", loginData?.username);
   useEffect(() => {
-    setUsername("vedant");
-  }, [loginData]);
+    if (loginData?.username) {
+      setUsername(loginData.username);
+      dispatch(getUser({ username: loginData.username }));
+    }
+  }, [dispatch, loginData]);
 
   useEffect(() => {
     // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/");
