@@ -25,14 +25,14 @@ const Chatbox = () => {
 
   console.log("loginData?.username: ", loginData?.username);
   useEffect(() => {
-    setUsername(loginData?.username);
+    setUsername("vedant");
   }, [loginData]);
 
   useEffect(() => {
-    const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
-    // const newSocket = new WebSocket(
-    //   "ws://chat-app-backend-vedant.vercel.app/ws/chat/myroom/"
-    // );
+    // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/myroom/");
+    const newSocket = new WebSocket(
+      "ws://chat-app-backend-vedant.vercel.app/ws/chat/myroom/"
+    );
 
     newSocket.onopen = () => {
       console.log("WebSocket connection opened");
