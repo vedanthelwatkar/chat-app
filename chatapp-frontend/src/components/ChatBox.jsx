@@ -15,26 +15,24 @@ import { authUserSelector } from "../redux/selectors/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/slice/AuthSlice";
 
-const Chatbox = () => {
+const Chatbox = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
-  const { loginData, userData } = useSelector(authUserSelector);
-  console.log("userData: ", userData);
+  const { loginData } = useSelector(authUserSelector);
   const [username, setUsername] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
 
-  console.log("loginData?.username: ", loginData?.username);
   useEffect(() => {
     if (loginData?.username) {
       setUsername(loginData.username);
+      setReceiverUsername(selectedUser);
       dispatch(getUser({ username: loginData.username }));
     }
-  }, [dispatch, loginData]);
+  }, [dispatch, loginData, selectedUser]);
 
   useEffect(() => {
-    // const newSocket = new WebSocket("ws://localhost:8000/ws/chat/");
     const newSocket = new WebSocket(
       "wss://chat-app-9bk5.onrender.com/ws/chat/"
     );
@@ -44,9 +42,12 @@ const Chatbox = () => {
     };
 
     newSocket.onmessage = (event) => {
-      console.log("Received message:", event.data);
       const data = JSON.parse(event.data);
-      setMessages((prevMessages) => [...prevMessages, data]);
+      const messageWithTimestamp = {
+        ...data,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prevMessages) => [...prevMessages, messageWithTimestamp]);
     };
 
     newSocket.onclose = (event) => {
@@ -66,6 +67,7 @@ const Chatbox = () => {
 
   const sendMessage = (event) => {
     event.preventDefault();
+
     if (socket && socket.readyState === WebSocket.OPEN) {
       const messageData = {
         message,
@@ -73,9 +75,8 @@ const Chatbox = () => {
         receiver: receiverUsername,
         timestamp: new Date().toISOString(),
       };
-      console.log("Sending message:", messageData);
+
       socket.send(JSON.stringify(messageData));
-      setMessages((prevMessages) => [...prevMessages, messageData]);
       setMessage("");
     }
   };
@@ -89,7 +90,7 @@ const Chatbox = () => {
           </Flex>
           <Flex className="info-text-ctn">
             <Flex className="user-name">
-              <span>Vedant helwatkar</span>
+              <span>{selectedUser}</span>
             </Flex>
           </Flex>
         </Flex>
@@ -112,6 +113,7 @@ const Chatbox = () => {
                 style={{
                   justifyContent:
                     msg.username === username ? "flex-end" : "flex-start",
+                  paddingBottom: "12px",
                 }}
               >
                 <Flex
@@ -120,9 +122,6 @@ const Chatbox = () => {
                   }
                 >
                   {msg.message}{" "}
-                  <span className="timestamp">
-                    {new Date(msg.timestamp).toLocaleTimeString()}
-                  </span>
                 </Flex>
               </Flex>
             ))}
@@ -143,11 +142,6 @@ const Chatbox = () => {
         />
         <SendOutlined className="send-icon" onClick={sendMessage} />
       </Flex>
-      <Input
-        placeholder="enter username"
-        value={receiverUsername}
-        onChange={(e) => setReceiverUsername(e.target.value)}
-      ></Input>
     </Flex>
   );
 };

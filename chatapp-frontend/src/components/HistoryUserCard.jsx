@@ -2,16 +2,20 @@ import { Flex } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "../style/history-card.scss";
 
-const HistoryUserCard = () => {
+const HistoryUserCard = ({ username, selectedUser, setSelectedUser }) => {
+  const handleClick = () => {
+    setSelectedUser(username);
+  };
+
   return (
-    <Flex className="profile-info-ctn">
+    <Flex className="profile-info-ctn" onClick={handleClick}>
       <Flex className="profile-info">
         <Flex className="profile-icon">
           <UserOutlined />
         </Flex>
         <Flex className="info-text-ctn">
           <Flex className="user-name">
-            <span>Vedant helwatkar</span>
+            <span>{username}</span>
           </Flex>
           <Flex className="user-text">
             <span>Are you free tonight?</span>

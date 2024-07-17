@@ -70,3 +70,8 @@ def signup_user(request):
 def logout_user(request):
     logout(request)
     return JsonResponse({"message": "User logged out"})
+
+def get_all_users(request):
+    users = User.objects.all()
+    usernames = [user.username for user in users]
+    return JsonResponse({"usernames": usernames})
