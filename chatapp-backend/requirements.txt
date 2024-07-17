@@ -7,6 +7,7 @@ channels==3.0.4
 daphne==3.0.2
 
 pymongo==3.12.3
+dnspython
 
 python-dotenv
 
