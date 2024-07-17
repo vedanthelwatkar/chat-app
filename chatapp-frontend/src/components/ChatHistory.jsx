@@ -21,15 +21,13 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
     setSearch(e.target.value);
   };
 
+  // Ensure allUserData and allUserData.usernames are defined before filtering
+  const usernamesToDisplay = allUserData?.usernames || [];
+
   // Filter usernames based on search input
-  const filteredUsernames = allUserData?.usernames.filter((username) =>
+  const filteredUsernames = usernamesToDisplay.filter((username) =>
     username.toLowerCase().includes(search.toLowerCase())
   );
-
-  // Determine which usernames to display
-  const usernamesToDisplay = search
-    ? filteredUsernames
-    : allUserData?.usernames || [];
 
   return (
     <Flex className="chat-history-ctn">
@@ -49,16 +47,14 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
           />
         </Flex>
         <Flex className="chat-history">
-          {usernamesToDisplay.map((u, index) => (
+          {filteredUsernames.map((u, index) => (
             <React.Fragment key={u}>
               <HistoryUserCard
                 username={u}
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
               />
-              {index !== usernamesToDisplay.length - 1 && (
-                <hr key={`hr-${u}`} />
-              )}
+              {index !== filteredUsernames.length - 1 && <hr key={`hr-${u}`} />}
             </React.Fragment>
           ))}
         </Flex>
