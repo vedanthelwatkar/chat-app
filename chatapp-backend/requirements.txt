@@ -15,10 +15,10 @@ pymongo==3.12.1
 python-dotenv
 
 # MongoDB support for Django
-djongo==1.6.2
+djongo
 
 # Certifi for SSL certificates
-certifi==2021.5.30
+certifi
 
 # Additional packages to ensure compatibility with Python 3.11.3
 dataclasses==0.8
