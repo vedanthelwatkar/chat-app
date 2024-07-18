@@ -26,6 +26,7 @@ import {
 } from "../redux/slice/MessageSlice";
 
 const Chatbox = ({ selectedUser, setSelectedUser }) => {
+  const [messages, setMessages] = useState([]);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [selectedEmojis, setSelectedEmojis] = useState([]);
   const dispatch = useDispatch();
@@ -61,19 +62,8 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
       const messageWithTimestamp = {
         ...data,
         timestamp: new Date().toISOString(),
-        currentUser: loginData.username,
       };
-      if (
-        !localMessages.some(
-          (msg) => msg.timestamp === messageWithTimestamp.timestamp
-        )
-      ) {
-        if (messageWithTimestamp.receiver === username) {
-          dispatch(storeReceivedMessage(messageWithTimestamp));
-        } else if (messageWithTimestamp.sender === username) {
-          dispatch(storeSentMessage(messageWithTimestamp));
-        }
-      }
+      setMessages((prevMessages) => [...prevMessages, messageWithTimestamp]);
     };
 
     newSocket.onclose = (event) => {
@@ -116,19 +106,6 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
         currentUser: username,
       };
       socket.send(JSON.stringify(messageData));
-      try {
-        const localMessage = {
-          sender: username,
-          receiver: selectedUser,
-          message:
-            message + selectedEmojis.map((emoji) => emoji.emoji).join(""),
-          timestamp: messageData.timestamp,
-        };
-        setLocalMessages([...localMessages, localMessage]);
-        dispatch(storeSentMessage(localMessage)); // Dispatch to store sent message locally
-      } catch (error) {
-        console.error("Error storing message:", error);
-      }
       setMessage("");
       setSelectedEmojis([]);
     }
@@ -164,31 +141,26 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
       </Flex>
       <Flex className="chatbox-body">
         <ul>
-          {[...receivedMessages, ...sentMessages]
-            .filter(
-              (msg) =>
-                (msg.sender === selectedUser && msg.receiver === username) || // Check if received message from selected user
-                (msg.sender === username && msg.receiver === selectedUser)
-            )
+          {messages
             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
             .map((msg, index) => (
               <Flex
                 key={index}
                 className={
-                  msg.sender === username ? "sent-wrapper" : "received-wrapper"
+                  msg.username === username ? "sent-wrapper" : "received-ctn"
                 }
                 style={{
                   justifyContent:
-                    msg.sender === username ? "flex-end" : "flex-start",
+                    msg.username === username ? "flex-end" : "flex-start",
                   paddingBottom: "12px",
                 }}
               >
                 <Flex
                   className={
-                    msg.sender === username ? "sent-ctn" : "received-ctn"
+                    msg.username === username ? "sent-ctn" : "received-ctn"
                   }
                 >
-                  {msg.message}
+                  {msg.message}{" "}
                 </Flex>
               </Flex>
             ))}
