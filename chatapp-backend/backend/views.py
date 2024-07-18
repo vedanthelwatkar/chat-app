@@ -3,7 +3,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Message
+from .models import Invitation
+import djongo
+from bson import ObjectId
 
 @csrf_exempt
 def home(request):
@@ -87,27 +89,99 @@ def get_all_users(request):
     return JsonResponse({"usernames": usernames})
 
 @csrf_exempt
-def store_message(request):
+def send_invite(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            current_user_username = data.get("username")
+            invited_receiver_name = data.get("receiver")
+
+            try:
+                current_user = User.objects.get(username=current_user_username)
+                invited_receiver = User.objects.get(username=invited_receiver_name)
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User not found"}, status=404)
+
+            if current_user == invited_receiver:
+                return JsonResponse({"message": "Cannot invite yourself"}, status=400)
+
+            # Check if an invitation already exists
+            existing_invitation = Invitation.objects.filter(
+                requester=current_user,
+                receiver=invited_receiver
+            ).exists()
+
+            if existing_invitation:
+                return JsonResponse({"message": "Invitation already sent"}, status=400)
+
+            new_invitation = Invitation(requester=current_user, receiver=invited_receiver)
+            new_invitation.save()
+
+            invitation_id = str(new_invitation._id)
+
+            return JsonResponse({"message": "Invitation sent successfully", "invitation_id": invitation_id})
+        
+        except Exception as e:
+            return JsonResponse({"message": "Error processing request", "error": str(e)}, status=500)
+
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def accept_invite(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        sender = data.get('sender')
-        receiver = data.get('receiver')
-        message_text = data.get('message')
-
+        invitation_id_str = data.get("invitation_id")
+        accept = data.get("accept")
+        
         try:
-            message = Message.objects.create(
-                sender=sender,
-                receiver=receiver,
-                message=message_text
-            )
-            return JsonResponse({
-                "message": "Message stored successfully",
-                "sender": message.sender,
-                "receiver": message.receiver,
-                "message": message.message,
-                "timestamp": message.timestamp.isoformat()
-            })
+            invitation_id = ObjectId(invitation_id_str)
+            invitation = Invitation.objects.get(_id=invitation_id)
+        except Invitation.DoesNotExist:
+            return JsonResponse({"message": f"Invitation with _id {invitation_id_str} not found"}, status=404)
         except Exception as e:
-            return JsonResponse({"message": str(e)}, status=500)
+            return JsonResponse({"message": f"Error retrieving invitation: {str(e)}"}, status=500)
+                
+        if accept is not None:
+            if accept:
+                invitation.accepted = True
+                invitation.save()
+                return JsonResponse({"message": "Invitation accepted successfully"})
+            else:
+                invitation.delete()
+                return JsonResponse({"message": "Invitation rejected and removed"})
+        else:
+            return JsonResponse({"message": "Invalid 'accept' flag provided"}, status=400)
+    
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)
+
+@csrf_exempt
+def get_invitations(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            current_user_username = data.get("username")
+
+            try:
+                current_user = User.objects.get(username=current_user_username)
+            except User.DoesNotExist:
+                return JsonResponse({"message": "User not found"}, status=404)
+
+            invitations_received = Invitation.objects.filter(receiver=current_user)
+
+            response_data = []
+            for invitation in invitations_received:
+                response_data.append({
+                    "sender_username": invitation.requester.username,
+                    "invitation_id": str(invitation._id),
+                    "accepted": invitation.accepted
+                })
+
+            return JsonResponse({"invitations": response_data})
+
+        except Exception as e:
+            return JsonResponse({"message": "Error processing request", "error": str(e)}, status=500)
+
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)

@@ -1,6 +1,10 @@
 .layout-wrapper {
-  background: var(--white, #fff);
+  background: var(--main-bg);
   height: 100vh;
+}
+
+.chatbox-wrapper {
+  background: var(--main-bg);
 }
 
 .ant-layout-header {
@@ -11,8 +15,8 @@
 }
 
 .header-wrapper {
-  background: var(--white, #fff);
-  border-bottom: 1px solid var(--stroke, #dcdcdc);
+  background: var(--main-bg, #000);
+  border-bottom: 1px solid var(--stroke-color, #dcdcdc);
   box-shadow: 0px 1px 8px 0px rgba(20, 20, 20, 0.08);
 }
 

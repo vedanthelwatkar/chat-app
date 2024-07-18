@@ -8,4 +8,7 @@ export const ApiEndPoints = {
   LOGOUT: "/logout",
   GET_USERS: "/users",
   STORE: "/store-message",
+  INVITE: "/invite",
+  GET_INVITATIONS: "/get-invitations",
+  ACCEPT: "/accept-invite",
 };

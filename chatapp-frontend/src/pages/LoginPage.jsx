@@ -11,7 +11,6 @@ const { Text } = Typography;
 
 const LoginPage = () => {
   const { loginData, error } = useSelector(authUserSelector);
-  console.log("error: ", error);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

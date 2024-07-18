@@ -4,49 +4,91 @@
   height: 45px;
   justify-content: space-between;
   cursor: pointer;
+  background-color: var(--background-color);
+  .buttons-wrapper {
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 12px;
+    .accept-btn {
+      background-color: var(--success-dark);
+      color: white;
+    }
+    .reject-btn {
+      background-color: var(--error-dark);
+      color: white;
+    }
+  }
   .profile-info {
     gap: 12px;
+    background-color: var(--background-color);
+    .profile-icon {
+      background-color: var(--background-color);
+    }
     .anticon-user {
       border: 1px solid var(--text-secondary, #898989);
       border-radius: 50%;
+      background-color: var(--background-color);
     }
   }
   svg {
     height: 24px;
     width: 24px;
     margin: 10px;
+    background-color: var(--background-color);
   }
   .info-text-ctn {
     flex-direction: column;
     justify-content: space-between;
+    background-color: var(--background-color);
     .user-name {
       color: var(--text-primary, #0c0c0c);
       font-size: 14px;
       font-weight: 400;
+      background-color: var(--background-color);
+      span {
+        background-color: var(--background-color);
+      }
     }
     .user-text {
       color: var(--text-secondary, #898989);
       font-size: 12px;
       font-weight: 400;
+      background-color: var(--background-color);
+      span {
+        background-color: var(--background-color);
+      }
     }
   }
   .time-message {
     flex-direction: column;
     justify-content: space-between;
+    background-color: var(--background-color);
     .time-ctn {
       color: var(--text-secondary, #898989);
       font-size: 12px;
       font-weight: 300;
-    }
-    .message-count {
-      background-color: var(--primary-color, #232a87);
-      border-radius: 40px;
+      background-color: var(--background-color);
+      justify-content: center;
       span {
-        color: var(--secondary-color, #e9eaf3);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
+        background-color: var(--background-color);
+      }
+    }
+    .invite-btn {
+      color: white;
+      border: 0px;
+      cursor: pointer;
+      button {
+        border: 0px;
+        color: white;
+        padding: 0px;
+        background-color: var(--background-color);
+        span {
+          background-color: var(--background-color);
+        }
+      }
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

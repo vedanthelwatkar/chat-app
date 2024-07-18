@@ -11,6 +11,7 @@ const Gallery = () => {
       height="28"
       style={{
         enableBackground: "new 0 0 100 100",
+        fill: "white",
       }}
     >
       <g>

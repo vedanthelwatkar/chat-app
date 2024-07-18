@@ -7,13 +7,30 @@
   font-family: "Poppins", sans-serif;
 }
 
-:root {
+/* :root {
   --primary-color: #1677ff;
   --secondary-color: #e9eaf3;
   --background-color: #f9f9f9;
   --text-primary: #0c0c0c;
   --text-secondary: #898989;
   --stroke-color: #dcdcdc;
+  --grey-dark: #f2f2f2;
+  --grey-light: #f6f6f6;
+  --white-color: #fff;
+  --error-dark: #cc2200;
+  --success-dark: #6ea550;
+  --error-light: #fae9e5;
+  --success-light: #f0f6ed;
+} */
+
+:root {
+  --primary-color: #1677ff;
+  --secondary-color: #4a4a4a;
+  --background-color: #2d2d2d;
+  --main-bg: #1e1e1e;
+  --text-primary: #fff;
+  --text-secondary: white;
+  --stroke-color: #3e3737;
   --grey-dark: #f2f2f2;
   --grey-light: #f6f6f6;
   --white-color: #fff;

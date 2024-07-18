@@ -2,43 +2,15 @@
   justify-content: space-between;
   padding: 10px 32px 0px 32px;
   line-height: 42px;
-  .ant-menu-horizontal {
-    border-bottom: 0px;
-    color: var(--primary, #232a87);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.24px;
-  }
-  .ant-menu-horizontal .ant-menu-item {
-    padding: 0px 32px;
-    color: var(--text-secondary, #898989);
-  }
-
-  .ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected {
-    color: var(--primary, #232a87);
-  }
-
-  .ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after {
-    border-bottom-color: var(--primary, #232a87);
-  }
-
-  .ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover::after {
-    border-bottom-color: var(--primary, #232a87);
-  }
-
-  .ant-menu-horizontal > .ant-menu-item-active::after {
-    border-bottom-color: var(--white, #fff);
-  }
-
-  .ant-menu-light
-    .ant-menu-item:not(.ant-menu-item-selected):not(
-      .ant-menu-submenu-selected
-    ):hover {
-    color: var(--primary, #232a87);
+  color: var(--white-color);
+  background-color: var(--main-bg);
+  .ant-col {
+    background-color: var(--main-bg);
   }
 }
 
 .header-logout-wrapper {
+  color: var(--primary-color, #232a87);
   display: flex;
   justify-content: flex-end;
   align-items: center;

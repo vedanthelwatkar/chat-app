@@ -1,4 +1,4 @@
-import { Flex, Input } from "antd";
+import { Flex, Form, Input } from "antd";
 import "../style/chatbox.scss";
 import {
   MoreOutlined,
@@ -11,19 +11,33 @@ import Microphone from "../assets/Microphone";
 import Gallery from "../assets/Gallery";
 import EmojiIcon from "../assets/EmojiIcon";
 import { useEffect, useState } from "react";
-import { authUserSelector } from "../redux/selectors/selectors";
+import {
+  authUserSelector,
+  messageSelector,
+} from "../redux/selectors/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/slice/AuthSlice";
-import { storeMessage } from "../redux/slice/GetUsers";
+import EmojiPicker from "emoji-picker-react";
+import CloseIcon from "../assets/CloseIcon";
+import showToast from "../components/showToast";
+import {
+  storeSentMessage,
+  storeReceivedMessage,
+} from "../redux/slice/MessageSlice";
 
 const Chatbox = ({ selectedUser, setSelectedUser }) => {
-  const [messages, setMessages] = useState([]);
+  const [emojiOpen, setEmojiOpen] = useState(false);
+  const [selectedEmojis, setSelectedEmojis] = useState([]);
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const { loginData } = useSelector(authUserSelector);
+  const { sentMessages, receivedMessages } = useSelector(messageSelector);
+  console.log("sentMessages: ", sentMessages);
+  console.log("receivedMessages: ", receivedMessages);
   const [username, setUsername] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
+  const [localMessages, setLocalMessages] = useState([]);
 
   useEffect(() => {
     if (loginData?.username) {
@@ -47,8 +61,19 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
       const messageWithTimestamp = {
         ...data,
         timestamp: new Date().toISOString(),
+        currentUser: loginData.username,
       };
-      setMessages((prevMessages) => [...prevMessages, messageWithTimestamp]);
+      if (
+        !localMessages.some(
+          (msg) => msg.timestamp === messageWithTimestamp.timestamp
+        )
+      ) {
+        if (messageWithTimestamp.receiver === username) {
+          dispatch(storeReceivedMessage(messageWithTimestamp));
+        } else if (messageWithTimestamp.sender === username) {
+          dispatch(storeSentMessage(messageWithTimestamp));
+        }
+      }
     };
 
     newSocket.onclose = (event) => {
@@ -64,33 +89,58 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
     return () => {
       newSocket.close();
     };
-  }, []);
+  }, [localMessages, loginData, username]);
 
   const sendMessage = (event) => {
     event.preventDefault();
 
+    if (!socket || socket.readyState !== WebSocket.OPEN) {
+      showToast("WebSocket connection not established", "error");
+      return;
+    }
+
+    if (!username) {
+      showToast("User logged out!", "error");
+      return;
+    }
+    if (!receiverUsername) {
+      showToast("Select user to send message first!", "error");
+      return;
+    }
     if (socket && socket.readyState === WebSocket.OPEN) {
       const messageData = {
-        message,
+        message: message + selectedEmojis.map((emoji) => emoji.emoji).join(""),
         username,
         receiver: receiverUsername,
         timestamp: new Date().toISOString(),
+        currentUser: username,
       };
-
       socket.send(JSON.stringify(messageData));
       try {
-        dispatch(
-          storeMessage({
-            sender: username,
-            receiver: selectedUser,
-            message: message,
-          })
-        );
+        const localMessage = {
+          sender: username,
+          receiver: selectedUser,
+          message:
+            message + selectedEmojis.map((emoji) => emoji.emoji).join(""),
+          timestamp: messageData.timestamp,
+        };
+        setLocalMessages([...localMessages, localMessage]);
+        dispatch(storeSentMessage(localMessage)); // Dispatch to store sent message locally
       } catch (error) {
         console.error("Error storing message:", error);
       }
       setMessage("");
+      setSelectedEmojis([]);
     }
+  };
+
+  const handleEmojiClick = (emojiObject) => {
+    setMessage((prevMessage) => prevMessage + emojiObject.emoji);
+    setSelectedEmojis([...selectedEmojis, emojiObject]);
+  };
+
+  const handleEmoji = () => {
+    setEmojiOpen(!emojiOpen);
   };
 
   return (
@@ -114,26 +164,31 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
       </Flex>
       <Flex className="chatbox-body">
         <ul>
-          {messages
+          {[...receivedMessages, ...sentMessages]
+            .filter(
+              (msg) =>
+                (msg.sender === selectedUser && msg.receiver === username) || // Check if received message from selected user
+                (msg.sender === username && msg.receiver === selectedUser)
+            )
             .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
             .map((msg, index) => (
               <Flex
                 key={index}
                 className={
-                  msg.username === username ? "sent-wrapper" : "received-ctn"
+                  msg.sender === username ? "sent-wrapper" : "received-wrapper"
                 }
                 style={{
                   justifyContent:
-                    msg.username === username ? "flex-end" : "flex-start",
+                    msg.sender === username ? "flex-end" : "flex-start",
                   paddingBottom: "12px",
                 }}
               >
                 <Flex
                   className={
-                    msg.username === username ? "sent-ctn" : "received-ctn"
+                    msg.sender === username ? "sent-ctn" : "received-ctn"
                   }
                 >
-                  {msg.message}{" "}
+                  {msg.message}
                 </Flex>
               </Flex>
             ))}
@@ -143,17 +198,27 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
         <Flex className="interact-icons">
           <Microphone />
           <Gallery />
-          <EmojiIcon />
+          <Flex onClick={handleEmoji} className="emoji-ctn">
+            {emojiOpen ? <CloseIcon /> : <EmojiIcon />}
+          </Flex>
         </Flex>
-        <Input
-          placeholder="Type a message"
-          controls={false}
-          className="form-input"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <SendOutlined className="send-icon" onClick={sendMessage} />
+        <Form onFinish={sendMessage}>
+          <Form.Item>
+            <Input
+              placeholder="Type a message"
+              controls={false}
+              className="form-input"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onPressEnter={sendMessage}
+            />
+            <SendOutlined className="send-icon" onClick={sendMessage} />
+          </Form.Item>
+        </Form>
       </Flex>
+      {emojiOpen && (
+        <EmojiPicker onEmojiClick={handleEmojiClick} className="emoji-picker" />
+      )}
     </Flex>
   );
 };

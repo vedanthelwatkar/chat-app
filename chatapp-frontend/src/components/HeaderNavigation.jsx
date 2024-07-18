@@ -38,7 +38,6 @@ const HeaderNavigation = () => {
       <Col span={4} className="menu-column-logout">
         <Flex className="header-logout-wrapper" onClick={handleLogout}>
           <LogoutIcon />
-          <Text className="logout-text">Logout</Text>
         </Flex>
       </Col>
     </Row>
