@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { authUserSelector } from "../redux/selectors/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/slice/AuthSlice";
+import { storeMessage } from "../redux/slice/GetUsers";
 
 const Chatbox = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
@@ -77,6 +78,17 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
       };
 
       socket.send(JSON.stringify(messageData));
+      try {
+        dispatch(
+          storeMessage({
+            sender: username,
+            receiver: selectedUser,
+            message: message,
+          })
+        );
+      } catch (error) {
+        console.error("Error storing message:", error);
+      }
       setMessage("");
     }
   };

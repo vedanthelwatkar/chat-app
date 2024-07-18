@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .models import Message
 
 @csrf_exempt
 def home(request):
@@ -84,3 +85,29 @@ def get_all_users(request):
     users = User.objects.all()
     usernames = [user.username for user in users]
     return JsonResponse({"usernames": usernames})
+
+@csrf_exempt
+def store_message(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        sender = data.get('sender')
+        receiver = data.get('receiver')
+        message_text = data.get('message')
+
+        try:
+            message = Message.objects.create(
+                sender=sender,
+                receiver=receiver,
+                message=message_text
+            )
+            return JsonResponse({
+                "message": "Message stored successfully",
+                "sender": message.sender,
+                "receiver": message.receiver,
+                "message": message.message,
+                "timestamp": message.timestamp.isoformat()
+            })
+        except Exception as e:
+            return JsonResponse({"message": str(e)}, status=500)
+    else:
+        return JsonResponse({"message": "Invalid request method"}, status=405)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from backend.views import home, login_user, signup_user, logout_user,get_all_users
+from backend.views import home, login_user, signup_user, logout_user,get_all_users,store_message
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('signup', signup_user, name='signup_user'),
     path('logout', logout_user, name='logout_user'),
     path('chat', include('backend.urls')),
-    path('users',get_all_users,name="get_all_users")
+    path('users',get_all_users,name="get_all_users"),
+    path('store-message', store_message, name='store_message'),
 ]

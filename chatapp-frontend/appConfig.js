@@ -7,4 +7,5 @@ export const ApiEndPoints = {
   SIGNUP: "/signup",
   LOGOUT: "/logout",
   GET_USERS: "/users",
+  STORE: "/store-message",
 };

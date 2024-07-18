@@ -19,6 +19,23 @@ export const getAllUser = createAsyncThunk(
   }
 );
 
+export const storeMessage = createAsyncThunk(
+  "storeMessage",
+  async (username, { rejectWithValue }) => {
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${appconfig.BASE_URL}${ApiEndPoints.STORE}`,
+        data: username,
+      });
+      return response.data;
+    } catch (e) {
+      console.error("getUser error:", e);
+      return rejectWithValue(e);
+    }
+  }
+);
+
 const getUsers = createSlice({
   name: "getUsers",
   initialState: {
