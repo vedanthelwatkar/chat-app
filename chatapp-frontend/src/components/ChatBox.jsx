@@ -147,7 +147,9 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
               <Flex
                 key={index}
                 className={
-                  msg.username === username ? "sent-wrapper" : "received-ctn"
+                  msg.username === username
+                    ? "sent-wrapper"
+                    : "received-wrapper"
                 }
                 style={{
                   justifyContent:
