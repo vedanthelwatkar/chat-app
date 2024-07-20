@@ -81,16 +81,20 @@ WSGI_APPLICATION = 'chatappbackend.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 from pymongo.server_api import ServerApi
-
 import certifi
 ca = certifi.where()
+from dotenv import load_dotenv
+import os
+load_dotenv()
+mongodb_uri = os.getenv('MONGODB')
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'ClusterChatApp',  # Database name
         'CLIENT': {
-            'host': 'mongodb+srv://vedanthelwatkar:vedant@clusterchatapp.vigxcwz.mongodb.net/?retryWrites=true&w=majority&appName=ClusterChatApp',
+            'host': mongodb_uri,
             "username": "vedanthelwatkar",
             "password": "vedant",
             "authMechanism": "SCRAM-SHA-1",
