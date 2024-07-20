@@ -35,9 +35,11 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
   };
 
   const usernamesToDisplay = allUserData?.usernames || [];
-  const filteredUsernames = usernamesToDisplay.filter((username) =>
-    username.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsernames = usernamesToDisplay
+    .filter((username) => username !== currentUser)
+    .filter((username) =>
+      username.toLowerCase().includes(search.toLowerCase())
+    );
 
   const acceptedCount = totalInvitations.invitations
     ? totalInvitations.invitations.filter(
