@@ -11,19 +11,13 @@ import Microphone from "../assets/Microphone";
 import Gallery from "../assets/Gallery";
 import EmojiIcon from "../assets/EmojiIcon";
 import { useEffect, useState } from "react";
-import {
-  authUserSelector,
-  messageSelector,
-} from "../redux/selectors/selectors";
+import { authUserSelector } from "../redux/selectors/selectors";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../redux/slice/AuthSlice";
 import EmojiPicker from "emoji-picker-react";
 import CloseIcon from "../assets/CloseIcon";
 import showToast from "../components/showToast";
-import {
-  storeSentMessage,
-  storeReceivedMessage,
-} from "../redux/slice/MessageSlice";
+import { useMediaQuery } from "react-responsive";
 
 const Chatbox = ({ selectedUser, setSelectedUser }) => {
   const [messages, setMessages] = useState([]);
@@ -33,12 +27,9 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState(null);
   const { loginData } = useSelector(authUserSelector);
-  const { sentMessages, receivedMessages } = useSelector(messageSelector);
-  console.log("sentMessages: ", sentMessages);
-  console.log("receivedMessages: ", receivedMessages);
   const [username, setUsername] = useState("");
   const [receiverUsername, setReceiverUsername] = useState("");
-  const [localMessages, setLocalMessages] = useState([]);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   useEffect(() => {
     if (loginData?.username) {
@@ -79,7 +70,7 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
     return () => {
       newSocket.close();
     };
-  }, [localMessages, loginData, username]);
+  }, [loginData, username]);
 
   const sendMessage = (event) => {
     event.preventDefault();
@@ -129,7 +120,9 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
           </Flex>
           <Flex className="info-text-ctn">
             <Flex className="user-name">
-              <span>{selectedUser}</span>
+              <span>
+                {selectedUser !== "" ? selectedUser : "No user selected"}
+              </span>
             </Flex>
           </Flex>
         </Flex>
@@ -179,12 +172,16 @@ const Chatbox = ({ selectedUser, setSelectedUser }) => {
         <Form onFinish={sendMessage}>
           <Form.Item>
             <Input
+              style={{
+                cursor: receiverUsername ? "pointer" : "not-allowed",
+              }}
               placeholder="Type a message"
               controls={false}
               className="form-input"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onPressEnter={sendMessage}
+              onPressEnter={receiverUsername ? sendMessage : undefined}
+              disabled={!receiverUsername}
             />
             <SendOutlined className="send-icon" onClick={sendMessage} />
           </Form.Item>

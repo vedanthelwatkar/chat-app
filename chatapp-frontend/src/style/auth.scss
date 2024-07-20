@@ -13,13 +13,26 @@
       font-size: 24px;
       font-weight: 400;
       padding: 0px 0px 32px 0px;
+      color: var(--white-color);
     }
     .auth-inputs {
       flex-direction: column;
+      .ant-form-item-feedback-icon-success,
+      .ant-form-item-feedback-icon-error {
+        background-color: var(--white-color);
+        svg {
+          background-color: var(--white-color);
+        }
+      }
     }
     .auth-signin-container {
       justify-content: space-between;
       align-items: center;
+      .auth-btn {
+        span {
+          background-color: var(--primary-color);
+        }
+      }
       .auth-text {
         font-size: 12px;
       }

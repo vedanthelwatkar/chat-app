@@ -10,7 +10,7 @@ import showToast from "../components/showToast";
 const { Text } = Typography;
 
 const LoginPage = () => {
-  const { loginData, error } = useSelector(authUserSelector);
+  const { loginError, loginSuccess } = useSelector(authUserSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -19,13 +19,13 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (loginData?.loggedIn == 1) {
-      navigate("/");
+    if (loginError) {
+      showToast(`Error Logging in ${loginError.response.data.msg}`, "error");
     }
-    if (error) {
-      showToast("Error Logging in", "error");
+    if (loginSuccess) {
+      navigate("/chat");
     }
-  }, [navigate, dispatch, loginData, error]);
+  }, [navigate, dispatch, loginSuccess, loginError]);
 
   return (
     <Flex className="auth-wrapper">
@@ -55,7 +55,7 @@ const LoginPage = () => {
             <Link to="/signup" className="forgot-text">
               Sign Up
             </Link>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" className="auth-btn">
               Login
             </Button>
           </Flex>

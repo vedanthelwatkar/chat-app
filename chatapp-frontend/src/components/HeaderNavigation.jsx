@@ -1,23 +1,24 @@
 import "../style/header-nav.scss";
-import { Typography, Col, Row, Flex } from "antd";
+import { Col, Row, Flex } from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppIcon from "../assets/AppIcon.jsx";
 import LogoutIcon from "../assets/LogoutIcon.jsx";
 import { logoutUser, resetState } from "../redux/slice/AuthSlice.js";
-import { useDispatch } from "react-redux";
-const { Text } = Typography;
+import { useDispatch, useSelector } from "react-redux";
+import { authUserSelector } from "../redux/selectors/selectors.js";
 
 const HeaderNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState("/giftcard");
+  const { userData } = useSelector(authUserSelector);
 
   const handleLogout = () => {
     dispatch(logoutUser());
     dispatch(resetState());
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -26,14 +27,14 @@ const HeaderNavigation = () => {
 
   return (
     <Row className="header-nav">
-      {(endpoint === "/login" || endpoint === "/signup") && (
+      {(endpoint === "/" || endpoint === "/signup") && (
         <div className="hide-header"></div>
       )}
       <Col span={4} className="menu-column-logo">
         <AppIcon />
       </Col>
       <Col span={16} className="menu-column-items">
-        Chat App
+        {userData?.username}
       </Col>
       <Col span={4} className="menu-column-logout">
         <Flex className="header-logout-wrapper" onClick={handleLogout}>

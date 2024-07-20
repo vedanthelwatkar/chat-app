@@ -3,8 +3,12 @@ import { UserOutlined } from "@ant-design/icons";
 import "../style/history-card.scss";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authUserSelector } from "../redux/selectors/selectors";
-import { sendInvite } from "../redux/slice/InviteUserSlice";
+import {
+  authUserSelector,
+  inviteUserSelector,
+} from "../redux/selectors/selectors";
+import { getInvitations, sendInvite } from "../redux/slice/InviteUserSlice";
+import showToast from "./showToast";
 
 const HistoryUserCard = ({
   username,
@@ -14,26 +18,40 @@ const HistoryUserCard = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { userData } = useSelector(authUserSelector);
+  const { totalInvitations } = useSelector(inviteUserSelector);
+  const InvAccepted = totalInvitations?.invitations;
   const sender = userData.username;
   const receiverUser = username;
   const dispatch = useDispatch();
 
-  const showModal = () => {
+  const showModal = (e) => {
+    e.stopPropagation();
     setIsModalOpen(true);
   };
 
   const handleClick = () => {
-    setSelectedUser(username);
+    if (isAccepted) {
+      setSelectedUser(username);
+      showToast(`You are now chatting with ${username}`, "success");
+    } else {
+      showToast("Invite First to chat!", "error");
+    }
   };
 
   const handleOk = () => {
     dispatch(sendInvite({ username: sender, receiver: receiverUser }));
+    dispatch(getInvitations({ username: sender }));
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const isAccepted = InvAccepted?.some(
+    (invitation) =>
+      invitation.sender_username === username && invitation.accepted
+  );
 
   return (
     <Flex className="profile-info-ctn" onClick={handleClick}>
@@ -51,14 +69,18 @@ const HistoryUserCard = ({
         </Flex>
       </Flex>
       <Flex className="time-message">
-        <Flex className="time-ctn">
-          <span>4:42</span>
-        </Flex>
         <Flex className="invite-btn">
-          <Button onClick={showModal}>Invite</Button>
+          <Button
+            onClick={isAccepted ? handleClick : showModal}
+            style={{
+              color: isAccepted ? "#6ea550" : "#cc2200",
+            }}
+          >
+            {isAccepted ? "Chat" : "Invite"}
+          </Button>
         </Flex>
         <Modal
-          title="Basic Modal"
+          title="Invite to Chat"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}

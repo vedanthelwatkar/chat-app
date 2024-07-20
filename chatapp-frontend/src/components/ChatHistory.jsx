@@ -36,6 +36,15 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
     username.toLowerCase().includes(search.toLowerCase())
   );
 
+  const acceptedCount = totalInvitations.invitations
+    ? totalInvitations.invitations.filter(
+        (invitation) => invitation?.accepted === false
+      ).length
+    : 0;
+  console.log("acceptedCount: ", acceptedCount);
+
+  const showNoInvitationsMessage = acceptedCount <= 0;
+
   return (
     <Flex className="chat-history-ctn">
       <Flex className="history-menu">
@@ -53,43 +62,48 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
             placeholder="Search"
           />
         </Flex>
-        <Flex className="chat-history">
-          {filteredUsernames.map((u, index) => (
-            <React.Fragment key={u}>
-              <HistoryUserCard
-                username={u}
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-              />
-              {index !== filteredUsernames.length - 1 && <hr key={`hr-${u}`} />}
-            </React.Fragment>
-          ))}
-        </Flex>
+        {filteredUsernames.length !== 0 ? (
+          <Flex className="chat-history">
+            {filteredUsernames.map((u, index) => (
+              <React.Fragment key={u}>
+                <HistoryUserCard
+                  username={u}
+                  selectedUser={selectedUser}
+                  setSelectedUser={setSelectedUser}
+                />
+                {index !== filteredUsernames.length - 1 && (
+                  <hr key={`hr-${u}`} />
+                )}
+              </React.Fragment>
+            ))}
+          </Flex>
+        ) : (
+          <Flex className="chat-history">
+            <span>No Users found</span>
+          </Flex>
+        )}
         <Flex className="received-invitations">
           <Flex className="received-text">
             <span>Received Invitations</span>
           </Flex>
-          {totalInvitations.invitations &&
-          totalInvitations.invitations.length > 0 ? (
-            totalInvitations.invitations
-              .map((invitation, index) =>
-                !invitation?.accepted ? (
-                  <React.Fragment key={invitation.invitation_id}>
-                    <ReceivedInvitations
-                      username={invitation.sender_username}
-                      invite_id={invitation.invitation_id}
-                      selectedUser={selectedUser}
-                      setSelectedUser={setSelectedUser}
-                    />
-                    {index !== totalInvitations.invitations.length - 1 && (
-                      <hr key={`hr-${invitation.invitation_id}`} />
-                    )}
-                  </React.Fragment>
-                ) : null
-              )
-              .filter((invitation) => !invitation?.accepted)
-          ) : (
+          {showNoInvitationsMessage ? (
             <p>No invitations to display</p>
+          ) : (
+            totalInvitations.invitations
+              .filter((invitation) => !invitation?.accepted) // Only include non-accepted invitations
+              .map((invitation, index) => (
+                <React.Fragment key={invitation.invitation_id}>
+                  <ReceivedInvitations
+                    username={invitation.sender_username}
+                    invite_id={invitation.invitation_id}
+                    selectedUser={selectedUser}
+                    setSelectedUser={setSelectedUser}
+                  />
+                  {index !== totalInvitations.invitations.length - 1 && (
+                    <hr key={`hr-${invitation.invitation_id}`} />
+                  )}
+                </React.Fragment>
+              ))
           )}
         </Flex>
       </Flex>

@@ -105,7 +105,6 @@ def send_invite(request):
             if current_user == invited_receiver:
                 return JsonResponse({"message": "Cannot invite yourself"}, status=400)
 
-            # Check if an invitation already exists
             existing_invitation = Invitation.objects.filter(
                 requester=current_user,
                 receiver=invited_receiver

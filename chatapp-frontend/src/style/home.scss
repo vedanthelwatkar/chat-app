@@ -8,3 +8,100 @@
     width: 75%;
   }
 }
+
+.ant-modal-root {
+  .ant-modal-wrap {
+    background-color: transparent;
+    .ant-modal {
+      padding-bottom: 0px;
+      .ant-modal-content {
+        background-color: var(--background-color);
+        .ant-modal-close {
+          color: var(--white-color);
+          .ant-modal-close-x {
+            background-color: var(--background-color);
+            span {
+              svg {
+                background-color: var(--background-color);
+              }
+            }
+          }
+        }
+        .ant-modal-header {
+          .ant-modal-title {
+            color: var(--white-color);
+            background: var(--background-color);
+          }
+        }
+        .ant-modal-body {
+          p {
+            color: var(--white-color);
+            background-color: var(--background-color);
+          }
+        }
+        .ant-modal-footer {
+          .ant-btn-default {
+            background-color: var(--main-bg);
+            span {
+              color: var(--white-color);
+            }
+          }
+          .ant-btn-primary {
+            background-color: var(--primary-color);
+            span {
+              background-color: var(--primary-color);
+              color: var(--white-color);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ant-drawer {
+  background-color: transparent;
+  .ant-drawer-header {
+    padding-bottom: 0px;
+    .ant-drawer-header-title {
+      color: var(--white-color);
+      span {
+        color: var(--white-color);
+      }
+    }
+  }
+  .ant-drawer-body {
+    padding: 16px;
+    .history-menu {
+      display: none;
+    }
+  }
+  .history-ctn {
+    border-radius: 12px;
+    .chat-history {
+      height: 300px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page-wrapper {
+    .chatbox-wrapper {
+      width: 100%;
+    }
+    .ant-btn {
+      height: 25px;
+      width: 25px;
+      background-color: var(--background-color);
+      margin: 12px;
+      .ant-btn-icon {
+        span {
+          svg {
+            height: 24px;
+            width: 24px;
+          }
+        }
+      }
+    }
+  }
+}

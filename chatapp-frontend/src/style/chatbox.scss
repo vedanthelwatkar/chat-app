@@ -54,6 +54,7 @@
     padding: 24px;
     ul {
       width: 100%;
+      background-color: var(--background-color);
     }
     &::-webkit-scrollbar {
       width: 8px;
@@ -71,10 +72,12 @@
 
     .sent-wrapper {
       justify-content: flex-start;
+      background-color: var(--background-color);
     }
 
     .received-ctn {
       justify-content: flex-end;
+      background-color: var(--background-color);
     }
     .received-ctn,
     .sent-wrapper .sent-ctn {
@@ -148,5 +151,11 @@
     .epr_-sisw4f {
       display: none;
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .chatbox-wrapper-inner {
+    margin: 28px 24px 24px 0px;
   }
 }

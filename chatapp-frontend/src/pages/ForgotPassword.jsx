@@ -28,7 +28,7 @@ const ForgotPassword = () => {
             </Form.Item>
           </Flex>
           <Flex className="login-reset-container">
-            <Button type="default" onClick={() => navigate("/login")}>
+            <Button type="default" onClick={() => navigate("/")}>
               Login
             </Button>
             <Button type="primary" htmlType="submit">

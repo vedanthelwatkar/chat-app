@@ -10,13 +10,21 @@
     justify-content: center;
     margin-top: 10px;
     gap: 12px;
+    background-color: var(--background-color);
+
     .accept-btn {
       background-color: var(--success-dark);
       color: white;
+      span {
+        background-color: var(--success-dark);
+      }
     }
     .reject-btn {
       background-color: var(--error-dark);
       color: white;
+      span {
+        background-color: var(--error-dark);
+      }
     }
   }
   .profile-info {
@@ -62,12 +70,10 @@
   }
   .time-message {
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     background-color: var(--background-color);
     .time-ctn {
       color: var(--text-secondary, #898989);
-      font-size: 12px;
-      font-weight: 300;
       background-color: var(--background-color);
       justify-content: center;
       span {
@@ -85,6 +91,8 @@
         background-color: var(--background-color);
         span {
           background-color: var(--background-color);
+          font-size: 14px;
+          font-weight: 500;
         }
       }
       &:hover {

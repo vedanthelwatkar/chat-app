@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ApiEndPoints, appconfig } from "../../../appConfig";
 
-// Async Thunks for API Calls
 export const getUser = createAsyncThunk(
   "getUser",
   async (username, { rejectWithValue }) => {
@@ -70,7 +69,6 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
-// Redux Slice
 const authUser = createSlice({
   name: "authUser",
   initialState: {
@@ -80,7 +78,8 @@ const authUser = createSlice({
     signupData: [],
     logoutSuccess: false,
     logoutError: false,
-    error: null,
+    loginError: null,
+    signUpError: null,
     loading: false,
   },
   reducers: {
@@ -88,10 +87,13 @@ const authUser = createSlice({
       state.data = null;
       state.userData = [];
       state.loginData = [];
+      state.loginSuccess = false;
+      state.signUpSuccess = false;
       state.signupData = [];
       state.logoutSuccess = false;
       state.logoutError = false;
-      state.error = null;
+      state.loginError = null;
+      state.signUpError = null;
       state.loading = false;
     },
   },
@@ -107,34 +109,40 @@ const authUser = createSlice({
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = true;
+        state.error = action.payload;
         state.userData = action.payload;
       })
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
+        state.loginSuccess = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.loginData = action.payload;
+        state.loginSuccess = true;
         state.error = false;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = true;
+        state.loginError = action.payload;
+        state.loginSuccess = false;
         state.loginData = action.payload;
       })
       .addCase(signupUser.pending, (state) => {
         state.loading = true;
+        state.signUpSuccess = false;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.loading = false;
         state.signupData = action.payload;
+        state.signUpSuccess = true;
         state.error = false;
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = true;
+        state.signUpError = action.payload;
         state.signupData = action.payload;
+        state.signUpSuccess = false;
       })
       .addCase(logoutUser.pending, (state) => {
         state.loading = true;
@@ -152,6 +160,5 @@ const authUser = createSlice({
   },
 });
 
-// Export Actions and Reducer
 export const { resetState } = authUser.actions;
 export default authUser.reducer;

@@ -10,6 +10,7 @@ import ForgotPassword from "../src/pages/ForgotPassword";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store/index.js";
 import { PersistGate } from "redux-persist/integration/react";
+import AuthGuard from "./components/AuthGuard.jsx";
 
 const primaryButtonStyle = {
   colorPrimary: `#1677ff`,
@@ -52,11 +53,18 @@ const App = () => {
               </Header>
               <Content className="content-wrapper">
                 <Routes>
-                  <Route element={<Home />} path="/" />
-                  <Route element={<LoginPage />} path="/login" />
+                  <Route
+                    element={
+                      <AuthGuard>
+                        <Home />
+                      </AuthGuard>
+                    }
+                    path="/chat"
+                  />
+                  <Route element={<LoginPage />} path="/" />
                   <Route element={<SignupPage />} path="/signup" />
                   <Route element={<ForgotPassword />} path="/forgot-password" />
-                  <Route element={<Home />} path="*" />
+                  <Route element={<LoginPage />} path="*" />
                 </Routes>
               </Content>
             </Layout>
