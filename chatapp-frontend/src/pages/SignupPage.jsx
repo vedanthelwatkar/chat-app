@@ -20,7 +20,10 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (signUpError) {
-      showToast(`Error Logging in ${signUpError.response.data.msg}`, "error");
+      showToast(
+        `Error Logging in ${signUpError?.response?.data?.msg}`,
+        "error"
+      );
     }
     if (signUpSuccess) {
       navigate("/chat");

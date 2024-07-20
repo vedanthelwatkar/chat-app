@@ -1,6 +1,6 @@
 .layout-wrapper {
   background: var(--main-bg);
-  height: 100vh;
+  height: 100dvh;
 }
 
 .chatbox-wrapper {
