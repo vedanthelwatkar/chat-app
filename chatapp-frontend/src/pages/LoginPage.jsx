@@ -3,7 +3,7 @@ import "../style/auth.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { authUserSelector } from "../redux/selectors/selectors";
-import { loginUser } from "../redux/slice/AuthSlice";
+import { loginUser, resetLoginError } from "../redux/slice/AuthSlice";
 import { useEffect } from "react";
 import showToast from "../components/showToast";
 
@@ -24,6 +24,7 @@ const LoginPage = () => {
     }
     if (loginSuccess) {
       navigate("/chat");
+      dispatch(resetLoginError());
     }
   }, [navigate, dispatch, loginSuccess, loginError]);
 

@@ -11,4 +11,5 @@ export const ApiEndPoints = {
   INVITE: "/invite",
   GET_INVITATIONS: "/get-invitations",
   ACCEPT: "/accept-invite",
+  ADMIN: "/admin",
 };

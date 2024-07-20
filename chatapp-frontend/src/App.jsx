@@ -7,6 +7,7 @@ import HeaderNavigation from "./components/HeaderNavigation";
 import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
 import ForgotPassword from "../src/pages/ForgotPassword";
+import AdminPage from "../src/components/AdminPage.jsx";
 import { Provider } from "react-redux";
 import { persistor, store } from "./redux/store/index.js";
 import { PersistGate } from "redux-persist/integration/react";
@@ -66,6 +67,7 @@ const App = () => {
                   <Route element={<LoginPage />} path="/" />
                   <Route element={<SignupPage />} path="/signup" />
                   <Route element={<ForgotPassword />} path="/forgot-password" />
+                  <Route element={<AdminPage />} path="/admin" />
                   <Route element={<Home />} path="*" />
                 </Routes>
               </Content>

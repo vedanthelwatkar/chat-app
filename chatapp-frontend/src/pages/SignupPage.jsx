@@ -2,7 +2,7 @@ import { Button, Flex, Form, Input, Typography } from "antd";
 import "../style/auth.scss";
 import { authUserSelector } from "../redux/selectors/selectors";
 import { useSelector, useDispatch } from "react-redux";
-import { signupUser } from "../redux/slice/AuthSlice";
+import { signupUser, resetSignupError } from "../redux/slice/AuthSlice";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import showToast from "../components/showToast";
@@ -27,6 +27,7 @@ const LoginPage = () => {
     }
     if (signUpSuccess) {
       navigate("/chat");
+      dispatch(resetSignupError());
     }
   }, [navigate, dispatch, signUpSuccess, signUpError]);
 

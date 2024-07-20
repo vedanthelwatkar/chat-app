@@ -69,6 +69,22 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+export const adminPage = createAsyncThunk(
+  "adminPage",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios({
+        method: "GET",
+        url: `${appconfig.BASE_URL}${ApiEndPoints.ADMIN}`,
+      });
+      return response.data;
+    } catch (e) {
+      console.error("adminPage error:", e);
+      return rejectWithValue(e);
+    }
+  }
+);
+
 const authUser = createSlice({
   name: "authUser",
   initialState: {
@@ -95,6 +111,12 @@ const authUser = createSlice({
       state.loginError = null;
       state.signUpError = null;
       state.loading = false;
+    },
+    resetLoginError: (state) => {
+      state.loginError = null;
+    },
+    resetSignupError: (state) => {
+      state.signUpError = null;
     },
   },
   extraReducers: (builder) => {
@@ -160,5 +182,6 @@ const authUser = createSlice({
   },
 });
 
-export const { resetState } = authUser.actions;
+export const { resetState, resetLoginError, resetSignupError } =
+  authUser.actions;
 export default authUser.reducer;
