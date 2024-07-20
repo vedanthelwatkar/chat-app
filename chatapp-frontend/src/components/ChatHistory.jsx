@@ -4,7 +4,7 @@ import SettingsGear from "../assets/SettingsGear";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "../assets/SearchIcon";
 import HistoryUserCard from "./HistoryUserCard";
-import { getAllUser } from "../redux/slice/GetUsers";
+import { getAllUser, getStatus } from "../redux/slice/GetUsers";
 import { useDispatch, useSelector } from "react-redux";
 import {
   authUserSelector,
@@ -16,16 +16,19 @@ import { getInvitations } from "../redux/slice/InviteUserSlice";
 
 const ChatHistory = ({ selectedUser, setSelectedUser }) => {
   const [search, setSearch] = useState("");
-  const { allUserData } = useSelector(getUsersSelector);
+  const { allUserData, getStatusData } = useSelector(getUsersSelector);
   const { userData } = useSelector(authUserSelector);
   const { totalInvitations } = useSelector(inviteUserSelector);
   const currentUser = userData?.username;
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (selectedUser) {
+      dispatch(getStatus({ username: currentUser, receiver: selectedUser }));
+    }
     dispatch(getAllUser());
     dispatch(getInvitations({ username: currentUser }));
-  }, [dispatch, currentUser]);
+  }, [dispatch, currentUser, selectedUser]);
 
   const handleSearchInputChange = (e) => {
     setSearch(e.target.value);
@@ -41,7 +44,6 @@ const ChatHistory = ({ selectedUser, setSelectedUser }) => {
         (invitation) => invitation?.accepted === false
       ).length
     : 0;
-  console.log("acceptedCount: ", acceptedCount);
 
   const showNoInvitationsMessage = acceptedCount <= 0;
 

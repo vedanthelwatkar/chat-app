@@ -15,6 +15,9 @@ class Invitation(models.Model):
     receiver = models.ForeignKey(User, related_name='received_invitations', on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('requester', 'receiver')
+        
     def __str__(self):
         return f"Invitation from {self.requester.username} to {self.receiver.username}"
 

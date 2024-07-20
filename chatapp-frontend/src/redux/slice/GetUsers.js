@@ -19,18 +19,18 @@ export const getAllUser = createAsyncThunk(
   }
 );
 
-export const storeMessage = createAsyncThunk(
-  "storeMessage",
-  async (username, { rejectWithValue }) => {
+export const getStatus = createAsyncThunk(
+  "getStatus",
+  async (data, { rejectWithValue }) => {
     try {
       const response = await axios({
         method: "POST",
-        url: `${appconfig.BASE_URL}${ApiEndPoints.STORE}`,
-        data: username,
+        url: `${appconfig.BASE_URL}${ApiEndPoints.STATUS}`,
+        data: data,
       });
       return response.data;
     } catch (e) {
-      console.error("getUser error:", e);
+      console.error("getStatus error:", e);
       return rejectWithValue(e);
     }
   }
@@ -41,6 +41,7 @@ const getUsers = createSlice({
   initialState: {
     data: null,
     allUserData: [],
+    getStatusData: [],
     error: null,
     loading: false,
   },
@@ -48,6 +49,7 @@ const getUsers = createSlice({
     resetState: (state) => {
       state.data = null;
       state.allUserData = [];
+      state.getStatusData = [];
       state.error = null;
       state.loading = false;
     },
@@ -66,6 +68,19 @@ const getUsers = createSlice({
         state.loading = false;
         state.error = true;
         state.allUserData = action.payload;
+      })
+      .addCase(getStatus.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getStatusData = action.payload;
+        state.error = false;
+      })
+      .addCase(getStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.getStatusData = action.payload;
       });
   },
 });

@@ -1,7 +1,7 @@
 import { Button, Flex, Modal } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import "../style/history-card.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   authUserSelector,
@@ -10,15 +10,12 @@ import {
 import { getInvitations, sendInvite } from "../redux/slice/InviteUserSlice";
 import showToast from "./showToast";
 
-const HistoryUserCard = ({
-  username,
-  selectedUser,
-  setSelectedUser,
-  accepted,
-}) => {
+const HistoryUserCard = ({ username, selectedUser, setSelectedUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [inviteSent, setInviteSent] = useState(false);
   const { userData } = useSelector(authUserSelector);
   const { totalInvitations } = useSelector(inviteUserSelector);
+  const canChatWith = totalInvitations?.can_chat_with || [];
   const InvAccepted = totalInvitations?.invitations;
   const sender = userData.username;
   const receiverUser = username;
@@ -30,7 +27,7 @@ const HistoryUserCard = ({
   };
 
   const handleClick = () => {
-    if (isAccepted) {
+    if (canChat) {
       setSelectedUser(username);
       showToast(`You are now chatting with ${username}`, "success");
     } else {
@@ -40,6 +37,7 @@ const HistoryUserCard = ({
 
   const handleOk = () => {
     dispatch(sendInvite({ username: sender, receiver: receiverUser }));
+    setInviteSent(true);
     dispatch(getInvitations({ username: sender }));
     setIsModalOpen(false);
   };
@@ -53,8 +51,14 @@ const HistoryUserCard = ({
       invitation.sender_username === username && invitation.accepted
   );
 
+  const canChat = canChatWith.includes(username);
+
   return (
-    <Flex className="profile-info-ctn" onClick={handleClick}>
+    <Flex
+      className="profile-info-ctn"
+      onClick={handleClick}
+      style={{ cursor: canChat ? "pointer" : "not-allowed" }}
+    >
       <Flex className="profile-info">
         <Flex className="profile-icon">
           <UserOutlined />
@@ -71,12 +75,12 @@ const HistoryUserCard = ({
       <Flex className="time-message">
         <Flex className="invite-btn">
           <Button
-            onClick={isAccepted ? handleClick : showModal}
+            onClick={canChat ? handleClick : showModal}
             style={{
-              color: isAccepted ? "#6ea550" : "#cc2200",
+              color: canChat ? "#6ea550" : "#cc2200",
             }}
           >
-            {isAccepted ? "Chat" : "Invite"}
+            {canChat ? "Chat" : "Invite"}
           </Button>
         </Flex>
         <Modal

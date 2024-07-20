@@ -2,18 +2,33 @@ import { Button, Drawer, Flex } from "antd";
 import "../style/home.scss";
 import ChatHistory from "../components/ChatHistory";
 import Chatbox from "../components/ChatBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { MenuOutlined } from "@ant-design/icons";
+import { getAllUser } from "../redux/slice/GetUsers";
+import { getInvitations } from "../redux/slice/InviteUserSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { authUserSelector } from "../redux/selectors/selectors";
 
 const Home = () => {
+  const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState("");
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const { userData } = useSelector(authUserSelector);
+  const currentUser = userData?.username;
 
   const showDrawer = () => setDrawerVisible(true);
   const closeDrawer = () => setDrawerVisible(false);
 
+  const handleItemClick = () => {
+    closeDrawer();
+  };
+
+  useEffect(() => {
+    dispatch(getAllUser());
+    dispatch(getInvitations({ username: currentUser }));
+  }, [dispatch, currentUser]);
   return (
     <Flex className="home-page-wrapper">
       {isMobile && (
@@ -30,7 +45,7 @@ const Home = () => {
           placement="left"
           closable={true}
           onClose={closeDrawer}
-          visible={drawerVisible}
+          open={drawerVisible}
           width={300}
         >
           <ChatHistory

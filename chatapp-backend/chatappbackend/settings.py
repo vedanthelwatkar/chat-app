@@ -88,18 +88,17 @@ import os
 load_dotenv()
 mongodb_uri = os.getenv('MONGODB')
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'ClusterChatApp',  # Database name
+        'NAME': 'chatapp',
         'CLIENT': {
             'host': mongodb_uri,
-            "username": "vedanthelwatkar",
-            "password": "vedant",
+            "username": "vedannnnnnt",
+            "password": "vedd2201",
             "authMechanism": "SCRAM-SHA-1",
-            'tlsCAFile': ca,  # Optional if using TLS/SSL
-            'server_api':ServerApi('1'),  # MongoDB server API version
+            'tlsCAFile': ca,
+            'server_api':ServerApi('1'),
         },
     }
 }

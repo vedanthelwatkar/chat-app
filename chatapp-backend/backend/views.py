@@ -25,10 +25,6 @@ def home(request):
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
 
-def chat_page(request, *args, **kwargs):
-    context = {}
-    return JsonResponse({"message": "User authenticated and authorized to view chat pages", "loggedIn": 1})
-
 @csrf_exempt
 def login_user(request):
     if request.user.is_authenticated:
@@ -162,25 +158,63 @@ def get_invitations(request):
             data = json.loads(request.body)
             current_user_username = data.get("username")
 
-            try:
-                current_user = User.objects.get(username=current_user_username)
-            except User.DoesNotExist:
-                return JsonResponse({"message": "User not found"}, status=404)
+            current_user = User.objects.get(username=current_user_username)
 
-            invitations_received = Invitation.objects.filter(receiver=current_user)
-
+            all_invitations = Invitation.objects.all()
+            chat_users = set()
             response_data = []
-            for invitation in invitations_received:
-                response_data.append({
-                    "sender_username": invitation.requester.username,
-                    "invitation_id": str(invitation._id),
-                    "accepted": invitation.accepted
-                })
 
-            return JsonResponse({"invitations": response_data})
+            for invitation in all_invitations:
+                if (invitation.receiver == current_user or invitation.requester == current_user) and invitation.accepted:
+                    chat_users.add(invitation.requester.username if invitation.receiver == current_user else invitation.receiver.username)
+
+                if invitation.receiver == current_user:
+                    response_data.append({
+                        "sender_username": invitation.requester.username,
+                        "invitation_id": str(invitation._id),
+                        "accepted": invitation.accepted
+                    })
+
+            return JsonResponse({
+                "invitations": response_data,
+                "can_chat_with": list(chat_users)
+            })
 
         except Exception as e:
+            print(f"Unhandled Error: {e}")
             return JsonResponse({"message": "Error processing request", "error": str(e)}, status=500)
 
     else:
         return JsonResponse({"message": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def check_invitation_status(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        current_user_username = data.get("username")
+        receiver_username = data.get("receiver")
+
+        if not current_user_username or not receiver_username:
+            return JsonResponse({"message": "Invalid data"}, status=400)
+
+        current_user = User.objects.get(username=current_user_username)
+        receiver = User.objects.get(username=receiver_username)
+
+        invitations = Invitation.objects.all()
+
+        for invitation in invitations:
+            if (invitation.requester == current_user and invitation.receiver == receiver) or \
+               (invitation.requester == receiver and invitation.receiver == current_user):
+                if invitation.accepted:
+                    return JsonResponse({"message": "Invitation accepted. You can chat."})
+
+        return JsonResponse({"message": "Invitation not accepted. Cannot chat yet."})
+
+    return JsonResponse({"message": "Invalid request method"}, status=405)
+
+
+
+def chat_page(request, *args, **kwargs):
+    context = {}
+    return JsonResponse({"message": "User authenticated and authorized to view chat pages", "loggedIn": 1})
