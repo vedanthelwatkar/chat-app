@@ -55,6 +55,9 @@
     ul {
       width: 100%;
       background-color: var(--background-color);
+      .received-wrapper {
+        background-color: var(--background-color);
+      }
     }
     &::-webkit-scrollbar {
       width: 8px;
@@ -93,6 +96,9 @@
     align-items: center;
     background-color: var(--main-bg);
     height: 46px;
+    .ant-input::placeholder {
+      color: var(--white-color);
+    }
     .interact-icons {
       margin-left: 12px;
       background-color: var(--main-bg);
