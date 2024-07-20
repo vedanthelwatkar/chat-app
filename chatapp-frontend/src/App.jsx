@@ -48,9 +48,11 @@ const App = () => {
             }}
           >
             <Layout className="layout-wrapper">
-              <Header className="header-wrapper">
-                <HeaderNavigation />
-              </Header>
+              <AuthGuard>
+                <Header className="header-wrapper">
+                  <HeaderNavigation />
+                </Header>
+              </AuthGuard>
               <Content className="content-wrapper">
                 <Routes>
                   <Route
