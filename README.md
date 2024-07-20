@@ -16,7 +16,7 @@ The application allows users to:
 - **Backend:** Django (Python)
 - **Frontend:** React (JavaScript)
 - **Real-Time Communication:** Django Channels
-- **Database:** SQLite (default), configurable to other databases
+- **Database:** MongoDB (integration with Django ORM), configurable to other databases
 
 ## Features
 
@@ -120,36 +120,6 @@ The application allows users to:
 - **React** was chosen for the frontend to leverage its component-based architecture and state management capabilities.
 - **Django Channels** was used to implement real-time chat functionality.
 
-### Assumptions
-
-- Default configurations are used for development purposes.
-- Deployment steps for production (e.g., Gunicorn, Nginx) are not included in this README but can be added as needed.
-
-### Incomplete Aspects
-
-- Additional features such as notifications, user profiles, and enhanced security measures can be added with more time.
-- Comprehensive UI/UX improvements and advanced real-time features could be explored.
-
-## Testing
-
-- Basic unit tests and integration tests are included. To run tests:
-  ```bash
-  python manage.py test
-  ```
-
-## Next Steps
-
-- Implement production deployment steps with Gunicorn and Nginx.
-- Enhance the UI/UX and add additional features based on user feedback.
-
-## Repository
-
-- **GitHub Repository:** [Link to your repository](repository-url)
-
 ## Contact
 
-For any questions or clarifications, please reach out to dreamjob@zentratech.com.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+For any questions or clarifications, please reach out to vedanthelwatkar@gmail.com.
